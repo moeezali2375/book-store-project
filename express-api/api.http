@@ -1,0 +1,14 @@
+@url=http://localhost:4000/api
+
+###
+GET {{url}}
+
+###
+POST {{url}}/writer
+Content-Type:application/json
+
+{
+	"name":"Moeez Ali",
+	"email":"moeezali2375@gmail.com",
+	"password":"1234"
+}
