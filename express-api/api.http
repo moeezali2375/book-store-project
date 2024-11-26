@@ -1,4 +1,5 @@
 @url=http://localhost:4000/api
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NDU2MjAxOTZjMWI3NDM2N2IwNDU0YiIsImlhdCI6MTczMjYwMDMyMywiZXhwIjoxNzMyNjg2NzIzfQ.JYjGTF-zsEuan2BW0HUjcZswXOrl7KEyzDc8phNer24
 
 ###
 GET {{url}}
@@ -9,6 +10,28 @@ Content-Type:application/json
 
 {
 	"name":"Moeez Ali",
+	"email":"moeezali375@icloud.com",
+	"password":"1234"
+}
+
+###
+POST {{url}}/reader
+Content-Type:application/json
+
+{
+	"name":"Moeez Ali",
 	"email":"moeezali2375@gmail.com",
 	"password":"1234"
 }
+
+###
+GET {{url}}/writer/614615
+Authorization: Bearer {{token}}
+
+###
+GET {{url}}/reader/388153
+Authorization: Bearer {{token}}
+
+###
+GET {{url}}/token
+Authorization: Bearer {{token}}
