@@ -204,3 +204,35 @@ export const regenerateToken = async (req, res) => {
     res.status(400).send({ msg: { title: error.message } });
   }
 };
+
+export const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password)
+      throw new Error("Please give email and password. 👀");
+    const user = await User.findOne({ email: email });
+    if (user) {
+      const hehe = await user.matchPassword(password);
+      if (hehe) {
+        return res.status(200).send({
+          user: {
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            isVerified: user.isVerified,
+            token: generateToken(user._id, 1),
+            type: user.type,
+          },
+          msg: {
+            title: "Authentication successfull! 🤩",
+            desc: "Welcome Back.",
+          },
+        });
+      } else throw new Error("Incorrect password. ✋🏻");
+    } else {
+      throw new Error("The email you have provided doesn't exist. 🤪");
+    }
+  } catch (error) {
+    res.status(400).send({ msg: { title: error.message } });
+  }
+};
