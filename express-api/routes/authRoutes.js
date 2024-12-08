@@ -1,6 +1,7 @@
 import express from "express";
 import {
   login,
+  logout,
   regenerateToken,
   registerReader,
   registerWriter,
@@ -22,5 +23,7 @@ router.get("/reader/:token", protect, verifyReaderToken);
 router.get("/token", protect, regenerateToken);
 
 router.post("/login", login);
+
+router.post("/logout", protect, logout);
 
 export default router;

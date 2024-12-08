@@ -1,6 +1,5 @@
 @url=http://localhost:4000/api
-@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NDU2MjAxOTZjMWI3NDM2N2IwNDU0YiIsImlhdCI6MTczMjYwMDMyMywiZXhwIjoxNzMyNjg2NzIzfQ.JYjGTF-zsEuan2BW0HUjcZswXOrl7KEyzDc8phNer24
-
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NGZlYjIwMWI0MjlmMzU4YzJkZDhmZSIsImlhdCI6MTczMzI5MDc4OCwiZXhwIjoxNzMzMzc3MTg4fQ.W4g3Vxr7qgwmcvroBJgyTq4FzqnsgR-mKSI_Ll8fJ5A
 ###
 GET {{url}}
 
@@ -10,7 +9,7 @@ Content-Type:application/json
 
 {
 	"name":"Moeez Ali",
-	"email":"moeezali375@icloud.com",
+	"email":"moeezali2375@icloud.com",
 	"password":"1234"
 }
 
@@ -25,7 +24,7 @@ Content-Type:application/json
 }
 
 ###
-GET {{url}}/writer/614615
+GET {{url}}/writer/264050
 Authorization: Bearer {{token}}
 
 ###
@@ -42,6 +41,39 @@ POST {{url}}/login
 Content-Type:application/json
 
 {
-	"email":"moeezali2375@gmail.com",
+	"email":"moeezali2375@icloud.com",
 	"password":"1234"
+}
+
+###
+POST {{url}}/logout
+Authorization: Bearer {{token}}
+
+###
+GET {{url}}/reader
+Authorization: Bearer {{token}}
+
+###
+GET {{url}}/writer
+Authorization: Bearer {{token}}
+
+###
+GET {{url}}/genre
+Authorization: Bearer {{token}}
+
+
+###
+GET {{url}}/book
+Authorization: Bearer {{token}}
+
+###
+POST {{url}}/book
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+	"title":"School di kitaab",
+	"description":"Bohemia k ganay ki baat ho rhi hai yaha.",
+	"content":"mundeya no geet mere yaad jiwein school de kitaab.",
+	"genreId":"671a17a2dee57c5b8d3aa99d"
 }

@@ -7,6 +7,9 @@ import generateToken from "../utils/generateToken.js";
 import { emailVerificationMessage } from "../emails/verificationMessages.js";
 import { emailVerificationNotification } from "../emails/notificationMessages.js";
 import sendEmail from "../utils/sendEmail.js";
+import readerModel from "../models/readerModel.js";
+import writerModel from "../models/writerModel.js";
+import mongoose from "mongoose";
 
 const sendEmailNotification = async (to, subject, message) => {
   try {
@@ -37,6 +40,7 @@ export const registerWriter = async (req, res) => {
     }
 
     const user = new User({
+      _id: new mongoose.Types.ObjectId(),
       name: name,
       email: email,
       password: password,
@@ -45,7 +49,11 @@ export const registerWriter = async (req, res) => {
       verificationTokenExpires: expiry(300), //5 min
     });
 
+    const writer = new writerModel({
+      userId: user._id,
+    });
     await user.save();
+    await writer.save();
     const message = emailVerificationMessage(user);
     await sendEmailNotification(user.email, message.subject, message.body);
 
@@ -88,15 +96,20 @@ export const registerReader = async (req, res) => {
     }
 
     const user = new User({
+      _id: mongoose.Types.ObjectId,
       name: name,
       email: email,
       password: password,
-      type: true,
+      type: false,
       verificationToken: generateVerificationToken(),
       verificationTokenExpires: expiry(300), //5 min
     });
 
+    const reader = new readerModel({
+      userId: user._id,
+    });
     await user.save();
+    await reader.save();
     const message = emailVerificationMessage(user);
     await sendEmailNotification(user.email, message.subject, message.body);
 
@@ -235,4 +248,8 @@ export const login = async (req, res) => {
   } catch (error) {
     res.status(400).send({ msg: { title: error.message } });
   }
+};
+
+export const logout = async (req, res) => {
+  res.status(204).send({ msg: "Logged Out!" });
 };
