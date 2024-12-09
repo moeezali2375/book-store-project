@@ -79,6 +79,10 @@ export const registerWriter = async (req, res) => {
         title: "You are signed up! 🤟🏻",
         desc: "Please verify your account to continue.",
       },
+      user: {
+        isVerified: user.isVerified,
+        role: user.role,
+      },
     });
   } catch (error) {
     res.status(400).send({ msg: { title: error.message } });
@@ -144,6 +148,10 @@ export const registerReader = async (req, res) => {
       msg: {
         title: "You are signed up! 🤟🏻",
         desc: "Please verify your account to continue.",
+      },
+      user: {
+        isVerified: user.isVerified,
+        role: user.role,
       },
     });
   } catch (error) {
@@ -266,6 +274,10 @@ export const login = async (req, res) => {
           msg: {
             title: "Authentication successfull! 🤩",
             desc: "Welcome Back.",
+          },
+          user: {
+            isVerified: user.isVerified,
+            role: user.role,
           },
         });
       } else throw new Error("Incorrect password. ✋🏻");
