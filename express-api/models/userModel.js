@@ -19,15 +19,16 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  role: {
+    type: String,
+    enum: ["reader", "writer"],
+    required: true,
+  },
   verificationToken: {
     type: String,
   },
   verificationTokenExpires: {
     type: Date,
-  },
-  type: {
-    type: Boolean,
-    required: true,
   },
 });
 

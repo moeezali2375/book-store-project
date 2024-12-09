@@ -3,13 +3,13 @@ import {
   generateVerificationToken,
   expiry,
 } from "../utils/verificationToken.js";
-import generateToken from "../utils/generateToken.js";
 import { emailVerificationMessage } from "../emails/verificationMessages.js";
 import { emailVerificationNotification } from "../emails/notificationMessages.js";
 import sendEmail from "../utils/sendEmail.js";
 import readerModel from "../models/readerModel.js";
 import writerModel from "../models/writerModel.js";
 import mongoose from "mongoose";
+import jwt from "jsonwebtoken";
 
 const sendEmailNotification = async (to, subject, message) => {
   try {
@@ -21,10 +21,10 @@ const sendEmailNotification = async (to, subject, message) => {
 
 export const registerWriter = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, role, biography } = req.body;
 
-    if (!name || !email || !password) {
-      throw new Error("Please give name, email and password. 🥸");
+    if (!name || !email || !password || !role || !biography) {
+      throw new Error("Please give all details. 🥸");
     }
 
     const now = new Date();
@@ -44,27 +44,37 @@ export const registerWriter = async (req, res) => {
       name: name,
       email: email,
       password: password,
-      type: false,
+      role: "writer",
       verificationToken: generateVerificationToken(),
       verificationTokenExpires: expiry(300), //5 min
     });
 
     const writer = new writerModel({
       userId: user._id,
+      biography: biography,
     });
     await user.save();
     await writer.save();
     const message = emailVerificationMessage(user);
+
     await sendEmailNotification(user.email, message.subject, message.body);
 
-    return res.status(200).send({
-      user: {
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        isVerified: user.isVerified,
-        token: generateToken(user._id),
+    const token = jwt.sign(
+      {
+        user: {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          isVerified: user.isVerified,
+          role: user.role,
+        },
       },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" },
+    );
+    res.cookie("token", token, { httpOnly: true });
+
+    return res.status(200).send({
       msg: {
         title: "You are signed up! 🤟🏻",
         desc: "Please verify your account to continue.",
@@ -80,7 +90,7 @@ export const registerReader = async (req, res) => {
     const { name, email, password } = req.body;
 
     if (!name || !email || !password) {
-      throw new Error("Please give name, email and password. 🥸");
+      throw new Error("Please give all details. 🥸");
     }
 
     const now = new Date();
@@ -96,13 +106,13 @@ export const registerReader = async (req, res) => {
     }
 
     const user = new User({
-      _id: mongoose.Types.ObjectId,
+      _id: new mongoose.Types.ObjectId(),
       name: name,
       email: email,
       password: password,
-      type: false,
+      role: "reader",
       verificationToken: generateVerificationToken(),
-      verificationTokenExpires: expiry(300), //5 min
+      verificationTokenExpires: expiry(300),
     });
 
     const reader = new readerModel({
@@ -110,17 +120,27 @@ export const registerReader = async (req, res) => {
     });
     await user.save();
     await reader.save();
+
     const message = emailVerificationMessage(user);
+
     await sendEmailNotification(user.email, message.subject, message.body);
 
-    return res.status(200).send({
-      user: {
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        isVerified: user.isVerified,
-        token: generateToken(user._id),
+    const token = jwt.sign(
+      {
+        user: {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          isVerified: user.isVerified,
+          role: user.role,
+        },
       },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" },
+    );
+    res.cookie("token", token, { httpOnly: true });
+
+    return res.status(200).send({
       msg: {
         title: "You are signed up! 🤟🏻",
         desc: "Please verify your account to continue.",
@@ -137,7 +157,7 @@ export const verifyWriterToken = async (req, res) => {
     const user = await User.findOne({
       verificationToken: req.params.token,
       verificationTokenExpires: { $gt: Date.now() },
-      type: false,
+      role: "writer",
     });
 
     if (!user) {
@@ -170,7 +190,7 @@ export const verifyReaderToken = async (req, res) => {
     const user = await User.findOne({
       verificationToken: req.params.token,
       verificationTokenExpires: { $gt: Date.now() },
-      type: true,
+      role: "reader",
     });
 
     if (!user) {
@@ -226,16 +246,23 @@ export const login = async (req, res) => {
     const user = await User.findOne({ email: email });
     if (user) {
       const hehe = await user.matchPassword(password);
+
       if (hehe) {
-        return res.status(200).send({
-          user: {
-            _id: user._id,
-            name: user.name,
-            email: user.email,
-            isVerified: user.isVerified,
-            token: generateToken(user._id, 1),
-            type: user.type,
+        const token = jwt.sign(
+          {
+            user: {
+              _id: user._id,
+              name: user.name,
+              email: user.email,
+              isVerified: user.isVerified,
+              role: user.role,
+            },
           },
+          process.env.JWT_SECRET,
+          { expiresIn: "1d" },
+        );
+        res.cookie("token", token, { httpOnly: true });
+        return res.status(200).send({
           msg: {
             title: "Authentication successfull! 🤩",
             desc: "Welcome Back.",
@@ -251,5 +278,14 @@ export const login = async (req, res) => {
 };
 
 export const logout = async (req, res) => {
-  res.status(204).send({ msg: "Logged Out!" });
+  try {
+    res.clearCookie("token", { httpOnly: true });
+    res.status(200).send({
+      msg: {
+        title: "Logged out successfully! 👋",
+      },
+    });
+  } catch (error) {
+    res.status(400).send({ msg: "Error Logging out! ✋🏻" });
+  }
 };

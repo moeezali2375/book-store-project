@@ -8,7 +8,7 @@ import {
   verifyReaderToken,
   verifyWriterToken,
 } from "../controllers/authControllers.js";
-import protect from "../middlewares/authMiddleware.js";
+import { protect } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
@@ -16,14 +16,14 @@ router.post("/writer", registerWriter);
 
 router.post("/reader", registerReader);
 
-router.get("/writer/:token", protect, verifyWriterToken);
+router.get("/writer/verify/:token", protect(["writer"], 0), verifyWriterToken);
 
-router.get("/reader/:token", protect, verifyReaderToken);
+router.get("/reader/verify/:token", protect(["reader"], 0), verifyReaderToken);
 
-router.get("/token", protect, regenerateToken);
+router.get("/token", protect(["reader", "writer"], 0), regenerateToken);
 
 router.post("/login", login);
 
-router.post("/logout", protect, logout);
+router.post("/logout", protect(["reader", "writer"]), logout);
 
 export default router;
