@@ -1,21 +1,205 @@
-import Navigator from "@/components/Navigator";
-import Book, { BookI } from "@/components/Book";
-import axios from "axios";
+"use client";
 
-export const revalidate = 30;
+import React, { useState } from "react";
+import {
+  Card,
+  CardHeader,
+  CardFooter,
+  CardTitle,
+  CardContent,
+  CardDescription,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/Input";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/Select";
+import { AxiosResponse } from "axios";
+import { useRouter } from "next/navigation";
+import { DecodedToken } from "@/types/DecodedToken";
+import useAxios from "@/hooks/useAxios";
 
-export default async function Home() {
-  // const res = await axios.get("http://localhost:4000/book");
-  // const featuredBooks = res.data.books.filter((b: BookI) => b.rating > 4.5);
-  // return (
-  //   <div className="flex flex-col items-center justify-center text-center">
-  //     <Navigator endpoint={"/genre"} desc={"Genre Page"} />
-  //     <Navigator endpoint={"/book"} desc={"Book Page"} />
+const AuthPage: React.FC = () => {
+  const [isLogin, setIsLogin] = useState<boolean>(true); // Toggle between login and signup
+  const router = useRouter();
+  const axios = useAxios();
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    role: "reader",
+    biography: "",
+  });
 
-  //     <h1 className="text-2xl font-bold">Featured Books</h1>
-  //     {featuredBooks.map((b: BookI) => (
-  //       <Book key={b._id} b={b} />
-  //     ))}
-  //   </div>
-  // );
-}
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleRoleChange = (value: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      role: value,
+    }));
+  };
+
+  const handleAuth = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (isLogin) {
+      try {
+        const res: AxiosResponse = await axios.post("/login", {
+          email: formData.email,
+          password: formData.password,
+        });
+        const token: DecodedToken = res?.data;
+        if (token && token.user.isVerified === false)
+          router.push("/otp/" + token.user.role);
+        else if (token && token.user.role === "reader") router.push("/reader");
+        else if (token && token.user.role === "writer") router.push("/writer");
+        else throw new Error("Token Error");
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      // Signup logic here
+      const signupData = {
+        ...formData,
+        biography: formData.role === "writer" ? formData.biography : undefined,
+      };
+      console.log("Signing up with:", signupData);
+    }
+  };
+
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-gray-50">
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <CardTitle>{isLogin ? "Login" : "Signup"}</CardTitle>
+          <CardDescription>
+            {isLogin
+              ? "Sign in to your account"
+              : "Create your account and join us"}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleAuth} className="space-y-4">
+            {!isLogin && (
+              <>
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium">
+                    Name
+                  </label>
+                  <Input
+                    id="name"
+                    name="name"
+                    type="text"
+                    placeholder="Enter your name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    required
+                    className="mt-1 w-full"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="role" className="block text-sm font-medium">
+                    Role
+                  </label>
+                  <Select
+                    onValueChange={handleRoleChange}
+                    defaultValue={formData.role}
+                    required
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select your role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="reader">Reader</SelectItem>
+                      <SelectItem value="writer">Writer</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                {formData.role === "writer" && (
+                  <div>
+                    <label
+                      htmlFor="biography"
+                      className="block text-sm font-medium"
+                    >
+                      Biography
+                    </label>
+                    <Input
+                      id="biography"
+                      name="biography"
+                      type="text"
+                      placeholder="Tell us about yourself"
+                      value={formData.biography}
+                      onChange={handleInputChange}
+                      required
+                      className="mt-1 w-full"
+                    />
+                  </div>
+                )}
+              </>
+            )}
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium">
+                Email
+              </label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="Enter your email"
+                value={formData.email}
+                onChange={handleInputChange}
+                required
+                className="mt-1 w-full"
+              />
+            </div>
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium">
+                Password
+              </label>
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                placeholder="Enter your password"
+                value={formData.password}
+                onChange={handleInputChange}
+                required
+                className="mt-1 w-full"
+              />
+            </div>
+            <Button type="submit" className="w-full">
+              {isLogin ? "Login" : "Signup"}
+            </Button>
+          </form>
+        </CardContent>
+        <CardFooter>
+          <p className="text-sm text-center text-muted-foreground">
+            {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
+            <button
+              type="button"
+              onClick={() => setIsLogin(!isLogin)}
+              className="text-blue-500 hover:underline"
+            >
+              {isLogin ? "Signup here" : "Login here"}
+            </button>
+          </p>
+        </CardFooter>
+      </Card>
+    </div>
+  );
+};
+
+export default AuthPage;
