@@ -1,6 +1,6 @@
 @url=http://localhost:4000/api
 @writerToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY3NTc2MjJlMjY3ZjE1NWEyMDBmYzBjMiIsIm5hbWUiOiJNb2VleiBBbGkiLCJlbWFpbCI6Im1vZWV6YWxpMjM3NUBpY2xvdWQuY29tIiwiaXNWZXJpZmllZCI6dHJ1ZSwicm9sZSI6IndyaXRlciJ9LCJpYXQiOjE3MzM3ODI1ODUsImV4cCI6MTczMzg2ODk4NX0.A2ZVpM8RkNvcsmjginWUS5Aabnn2t7GIoQYnRHj2uxY
-@readerToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY3NTc2ODExMjY3ZjE1NWEyMDBmYzBlMCIsIm5hbWUiOiJNb2VleiBBbGkiLCJlbWFpbCI6Im1vZWV6YWxpMjM3NUBnbWFpbC5jb20iLCJpc1ZlcmlmaWVkIjpmYWxzZSwicm9sZSI6InJlYWRlciJ9LCJpYXQiOjE3MzM3ODE1MjMsImV4cCI6MTczMzg2NzkyM30.eb5VUqwVQnOUtKKjEt5QOPSWjgcXZhKgWXjgNA2hxmY
+@readerToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY3NTc2ODExMjY3ZjE1NWEyMDBmYzBlMCIsIm5hbWUiOiJNb2VleiBBbGkiLCJlbWFpbCI6Im1vZWV6YWxpMjM3NUBnbWFpbC5jb20iLCJpc1ZlcmlmaWVkIjp0cnVlLCJyb2xlIjoicmVhZGVyIn0sImlhdCI6MTczMzc5MTE1OCwiZXhwIjoxNzMzODc3NTU4fQ.xWw-I21zVFPwqchX38p6U9J5mxbF70GjKiMG8bVv2rw
 ###
 GET {{url}}
 
@@ -45,7 +45,7 @@ POST {{url}}/login
 Content-Type:application/json
 
 {
-	"email":"moeezali2375@icloud.com",
+	"email":"moeezali2375@gmail.com",
 	"password":"1234"
 }
 
@@ -112,7 +112,7 @@ GET {{url}}/reader/book
 Cookie: token={{readerToken}}
 
 ###
-GET {{url}}/reader/book/67576550267f155a200fc0d4
+GET {{url}}/reader/book/67577c22047e807f1be7c3d2
 Cookie: token={{readerToken}}
 
 ###
@@ -121,7 +121,7 @@ Cookie: token={{readerToken}}
 Content-Type: application/json
 
 {
-	"bookId":"67576550267f155a200fc0d4"
+	"bookId":"67577c22047e807f1be7c3d2"
 }
 
 ###
