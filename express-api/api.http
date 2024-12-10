@@ -1,6 +1,6 @@
 @url=http://localhost:4000/api
-@writerToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY3NTZhMzJiYWVmMjI4ODBiMWEzNDgwZSIsIm5hbWUiOiJNb2VleiBBbGkiLCJlbWFpbCI6Im1vZWV6YWxpMjM3NUBpY2xvdWQuY29tIiwiaXNWZXJpZmllZCI6ZmFsc2UsInJvbGUiOiJ3cml0ZXIifSwiaWF0IjoxNzMzNzMxMTE4LCJleHAiOjE3MzM4MTc1MTh9.kchQBMc7fFHVzhVsdmLKTnDF0lZ3Xf_kwm0MTul3NBk
-@readerToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY3NTZhMDZmMzg2MjE1MWI5ZTFmODM0MyIsIm5hbWUiOiJNb2VleiBBbGkiLCJlbWFpbCI6Im1vZWV6YWxpMjM3NUBnbWFpbC5jb20iLCJpc1ZlcmlmaWVkIjpmYWxzZSwicm9sZSI6InJlYWRlciJ9LCJpYXQiOjE3MzM3MzA0MTUsImV4cCI6MTczMzgxNjgxNX0.2roeBztZmN3wnVgaxCpwDpqNhpi--lpLi2y6ZDRT44Y
+@writerToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY3NTc2MjJlMjY3ZjE1NWEyMDBmYzBjMiIsIm5hbWUiOiJNb2VleiBBbGkiLCJlbWFpbCI6Im1vZWV6YWxpMjM3NUBpY2xvdWQuY29tIiwiaXNWZXJpZmllZCI6dHJ1ZSwicm9sZSI6IndyaXRlciJ9LCJpYXQiOjE3MzM3ODI1ODUsImV4cCI6MTczMzg2ODk4NX0.A2ZVpM8RkNvcsmjginWUS5Aabnn2t7GIoQYnRHj2uxY
+@readerToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY3NTc2ODExMjY3ZjE1NWEyMDBmYzBlMCIsIm5hbWUiOiJNb2VleiBBbGkiLCJlbWFpbCI6Im1vZWV6YWxpMjM3NUBnbWFpbC5jb20iLCJpc1ZlcmlmaWVkIjpmYWxzZSwicm9sZSI6InJlYWRlciJ9LCJpYXQiOjE3MzM3ODE1MjMsImV4cCI6MTczMzg2NzkyM30.eb5VUqwVQnOUtKKjEt5QOPSWjgcXZhKgWXjgNA2hxmY
 ###
 GET {{url}}
 
@@ -32,7 +32,7 @@ GET {{url}}/writer/verify/237485
 Cookie: token={{writerToken}}
 
 ###
-GET {{url}}/reader/verify/257662
+GET {{url}}/reader/verify/706035
 Cookie: token={{readerToken}}
 
 ###
@@ -80,14 +80,14 @@ Cookie: token={{writerToken}}
 Content-Type: application/json
 
 {
-	"title":"School di kitaab 2",
+	"title":"School di kitaab 4",
 	"description":"Bohemia k ganay ki baat ho rhi hai yaha.",
 	"content":"mundeya no geet mere yaad jiwein school de kitaab.",
 	"genreId":"671a17a2dee57c5b8d3aa99d"
 }
 
 ###
-PUT {{url}}/writer/book/6756bb9863054cfe5e5db1d5
+PUT {{url}}/writer/book/67576d44267f155a200fc118
 Cookie: token={{writerToken}}
 Content-Type: application/json
 
@@ -112,7 +112,7 @@ GET {{url}}/reader/book
 Cookie: token={{readerToken}}
 
 ###
-GET {{url}}/reader/book/6756be8f2d83d323f37e9bb8
+GET {{url}}/reader/book/67576550267f155a200fc0d4
 Cookie: token={{readerToken}}
 
 ###
@@ -121,7 +121,7 @@ Cookie: token={{readerToken}}
 Content-Type: application/json
 
 {
-	"bookId":"6756be822d83d323f37e9bb4"
+	"bookId":"67576550267f155a200fc0d4"
 }
 
 ###
@@ -130,5 +130,5 @@ Cookie: token={{readerToken}}
 Content-Type: application/json
 
 {
-	"bookId":"6756be822d83d323f37e9bb4"
+	"bookId":"67576550267f155a200fc0d4"
 }

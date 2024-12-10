@@ -21,6 +21,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import useAxios from "@/hooks/useAxios";
+import { useRouter } from "next/navigation";
 
 const validRoutes = ["reader", "writer"] as const;
 
@@ -32,7 +34,8 @@ const FormSchema = z.object({
 
 const OTP: React.FC<{ params: { role: string } }> = ({ params }) => {
   const { role } = params;
-
+  const axios = useAxios();
+  const router = useRouter()
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -44,15 +47,25 @@ const OTP: React.FC<{ params: { role: string } }> = ({ params }) => {
     notFound();
   }
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+
+    try {
+      const response = await axios.get(`/${role}/verify/${data.pin}`);
+      console.log(response);
+    
+      toast({
+        title: "You submitted the following values:",
+        description: (
+          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+            <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+          </pre>
+        ),
+      });
+      router.push(`/${role}`);
+    } catch (error) {
+      console.log(error)
+    }
+
   }
   return (
     <Form {...form}>
