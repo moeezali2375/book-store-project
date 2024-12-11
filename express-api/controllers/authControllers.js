@@ -23,7 +23,7 @@ export const registerWriter = async (req, res) => {
   try {
     const { name, email, password, role, biography } = req.body;
 
-    if (!name || !email || !password || !role || !biography) {
+    if (!name || !email || !password  || !biography) {
       throw new Error("Please give all details. 🥸");
     }
 
