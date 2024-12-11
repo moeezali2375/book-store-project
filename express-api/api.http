@@ -1,6 +1,6 @@
 @url=http://localhost:4000/api
-@writerToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY3NTc2MjJlMjY3ZjE1NWEyMDBmYzBjMiIsIm5hbWUiOiJNb2VleiBBbGkiLCJlbWFpbCI6Im1vZWV6YWxpMjM3NUBpY2xvdWQuY29tIiwiaXNWZXJpZmllZCI6dHJ1ZSwicm9sZSI6IndyaXRlciJ9LCJpYXQiOjE3MzM3ODI1ODUsImV4cCI6MTczMzg2ODk4NX0.A2ZVpM8RkNvcsmjginWUS5Aabnn2t7GIoQYnRHj2uxY
-@readerToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY3NTc2ODExMjY3ZjE1NWEyMDBmYzBlMCIsIm5hbWUiOiJNb2VleiBBbGkiLCJlbWFpbCI6Im1vZWV6YWxpMjM3NUBnbWFpbC5jb20iLCJpc1ZlcmlmaWVkIjp0cnVlLCJyb2xlIjoicmVhZGVyIn0sImlhdCI6MTczMzc5MTE1OCwiZXhwIjoxNzMzODc3NTU4fQ.xWw-I21zVFPwqchX38p6U9J5mxbF70GjKiMG8bVv2rw
+@writerToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY3NTkyNjZhYjU2ODVhYWE3MTk0ODAxMSIsIm5hbWUiOiJNb2VleiBBbGkiLCJlbWFpbCI6Im1vZWV6YWxpMjM3NUBpY2xvdWQuY29tIiwiaXNWZXJpZmllZCI6ZmFsc2UsInJvbGUiOiJ3cml0ZXIifSwiaWF0IjoxNzMzODk1Nzg5LCJleHAiOjE3MzM5ODIxODl9.LsA9lybkj1dRx4J1xiybF3YB_AOSw8IDMUZSfouwV1Y
+@readerToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY3NTkyNmE0YjU2ODVhYWE3MTk0ODAxNyIsIm5hbWUiOiJNb2VleiBBbGkiLCJlbWFpbCI6Im1vZWV6YWxpMjM3NUBnbWFpbC5jb20iLCJpc1ZlcmlmaWVkIjpmYWxzZSwicm9sZSI6InJlYWRlciJ9LCJpYXQiOjE3MzM4OTU4NDcsImV4cCI6MTczMzk4MjI0N30.n0gNZY7vv3dV_Zzcs9iWsFVsKhPxbcJbg6eDrgK1ics
 ###
 GET {{url}}
 
@@ -28,11 +28,11 @@ Content-Type:application/json
 }
 
 ###
-GET {{url}}/writer/verify/237485
+GET {{url}}/writer/verify/577959
 Cookie: token={{writerToken}}
 
 ###
-GET {{url}}/reader/verify/706035
+GET {{url}}/reader/verify/976173
 Cookie: token={{readerToken}}
 
 ###
@@ -45,7 +45,7 @@ POST {{url}}/login
 Content-Type:application/json
 
 {
-	"email":"moeezali2375@gmail.com",
+	"email":"moeezali2375@icloud.com",
 	"password":"1234"
 }
 

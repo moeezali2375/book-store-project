@@ -58,16 +58,16 @@ export const registerWriter = async (req, res) => {
     const message = emailVerificationMessage(user);
 
     await sendEmailNotification(user.email, message.subject, message.body);
-
+    const userInfo = {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isVerified: user.isVerified,
+      role: user.role,
+    };
     const token = jwt.sign(
       {
-        user: {
-          _id: user._id,
-          name: user.name,
-          email: user.email,
-          isVerified: user.isVerified,
-          role: user.role,
-        },
+        user: userInfo,
       },
       process.env.JWT_SECRET,
       { expiresIn: "1d" },
@@ -79,10 +79,7 @@ export const registerWriter = async (req, res) => {
         title: "You are signed up! 🤟🏻",
         desc: "Please verify your account to continue.",
       },
-      user: {
-        isVerified: user.isVerified,
-        role: user.role,
-      },
+      user: userInfo,
     });
   } catch (error) {
     res.status(400).send({ msg: { title: error.message } });
@@ -129,15 +126,16 @@ export const registerReader = async (req, res) => {
 
     await sendEmailNotification(user.email, message.subject, message.body);
 
+    const userInfo = {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isVerified: user.isVerified,
+      role: user.role,
+    };
     const token = jwt.sign(
       {
-        user: {
-          _id: user._id,
-          name: user.name,
-          email: user.email,
-          isVerified: user.isVerified,
-          role: user.role,
-        },
+        user: userInfo,
       },
       process.env.JWT_SECRET,
       { expiresIn: "1d" },
@@ -149,10 +147,7 @@ export const registerReader = async (req, res) => {
         title: "You are signed up! 🤟🏻",
         desc: "Please verify your account to continue.",
       },
-      user: {
-        isVerified: user.isVerified,
-        role: user.role,
-      },
+      user: userInfo,
     });
   } catch (error) {
     res.status(400).send({ msg: { title: error.message } });
@@ -181,11 +176,20 @@ export const verifyWriterToken = async (req, res) => {
     const message = emailVerificationNotification(user);
     sendEmailNotification(user.email, message.subject, message.body);
 
+    const userInfo = {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isVerified: user.isVerified,
+      role: user.role,
+    };
+
     res.status(200).send({
       msg: {
         title: "Email verified successfully! 🥳",
         desc: "You can now start using the app.",
       },
+      user: userInfo,
     });
   } catch (error) {
     res.status(400).send({ msg: { title: error.message } });
@@ -214,11 +218,20 @@ export const verifyReaderToken = async (req, res) => {
     const message = emailVerificationNotification(user);
     sendEmailNotification(user.email, message.subject, message.body);
 
+    const userInfo = {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isVerified: user.isVerified,
+      role: user.role,
+    };
+
     res.status(200).send({
       msg: {
         title: "Email verified successfully! 🥳",
         desc: "You can now start using the app.",
       },
+      user: userInfo,
     });
   } catch (error) {
     res.status(400).send({ msg: { title: error.message } });
@@ -256,29 +269,28 @@ export const login = async (req, res) => {
       const hehe = await user.matchPassword(password);
 
       if (hehe) {
+        const userInfo = {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          isVerified: user.isVerified,
+          role: user.role,
+        };
         const token = jwt.sign(
           {
-            user: {
-              _id: user._id,
-              name: user.name,
-              email: user.email,
-              isVerified: user.isVerified,
-              role: user.role,
-            },
+            user: userInfo,
           },
           process.env.JWT_SECRET,
           { expiresIn: "1d" },
         );
+
         res.cookie("token", token, { httpOnly: true });
         return res.status(200).send({
           msg: {
             title: "Authentication successfull! 🤩",
             desc: "Welcome Back.",
           },
-          user: {
-            isVerified: user.isVerified,
-            role: user.role,
-          },
+          user: userInfo,
         });
       } else throw new Error("Incorrect password. ✋🏻");
     } else {
