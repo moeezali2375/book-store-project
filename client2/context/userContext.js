@@ -18,7 +18,8 @@ export const UserProvider = ({ children }) => {
 
   const updateUser = (newUser) => {
     setUser(newUser);
-    localStorage.setItem("user", JSON.stringify(newUser));
+    if (newUser) localStorage.setItem("user", JSON.parse(newUser));
+    else localStorage.removeItem("user");
   };
 
   useEffect(() => {
@@ -27,16 +28,14 @@ export const UserProvider = ({ children }) => {
         if (!user && router.pathname !== "/auth") {
           console.log("redirect to auth");
           router.push("/auth");
-        }
-        else if (
+        } else if (
           user &&
           !user.isVerified &&
           !router.pathname.startsWith("/otp")
         ) {
           console.log("redirect to otp");
           router.push(`/otp/${user.role}`);
-        }
-        else if (
+        } else if (
           user &&
           user.isVerified &&
           !router.pathname.startsWith(`/${user.role}`)
