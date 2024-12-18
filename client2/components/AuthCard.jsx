@@ -36,7 +36,6 @@ const AuthCard = () => {
         const res = await axiosInstance.post(`/${role}`, formData);
         setUser(res.data.user);
       } catch (error) {
-        console.log(error);
       } finally {
         setIsLoading(false);
       }
@@ -46,7 +45,6 @@ const AuthCard = () => {
         const res = await axiosInstance.post("/login", formData);
         setUser(res.data.user);
       } catch (error) {
-        console.log(error);
       } finally {
         setIsLoading(false);
       }
