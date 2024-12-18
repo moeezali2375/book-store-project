@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import BookCard from "@/components/BookCard";
 import CreateBookModal from "@/components/CreateBookModal";
 import UpdateBiographyModal from "@/components/UpdateBiographyModal";
+import Link from "next/link";
 
 const Home = () => {
   const [books, setBooks] = useState([]);
@@ -29,12 +30,14 @@ const Home = () => {
       <h1 className="text-3xl font-bold mb-6">Writer Dashboard</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {books.map((book) => (
-          <BookCard
-            key={book._id}
-            bookName={book.title}
-            genre={book.genreId.name}
-            description={book.description}
-          />
+          <Link href={`/writer/editbook/${book._id}`}>
+            <BookCard
+              key={book._id}
+              bookName={book.title}
+              genre={book.genreId.name}
+              description={book.description}
+            />
+          </Link>
         ))}
         {/* Create New Book Card */}
         <div

@@ -22,7 +22,6 @@ export async function getServerSideProps(context) {
   }
   );
   const books = response.data.books; // Access the books array
-  console.log(books)
   return {
     props: {
       books,
@@ -60,7 +59,7 @@ export default function Home({ books }) {
           withCredentials: true,
           body: JSON.stringify({ bookId }),
         });
-        
+
         console.log("added")
         setFavorites([...favorites, bookId]);
       }
@@ -76,6 +75,15 @@ export default function Home({ books }) {
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Reader</h1>
+
+      {/* Button to View Favorites */}
+      <div className="mb-4">
+        <Link href="/reader/favorites">
+          <button className="px-4 py-2 bg-green-500 text-white rounded-md">
+            View Favorite Books
+          </button>
+        </Link>
+      </div>
 
       <input
         type="text"
