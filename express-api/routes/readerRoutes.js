@@ -4,6 +4,7 @@ import {
   getAllBooks,
   getBookId,
   getReaderInfo,
+  getWriterInfoForReader,
   removeBookFromFavorites,
 } from "../controllers/readerController.js";
 import { protect } from "../middlewares/authMiddleware.js";
@@ -20,5 +21,7 @@ router.get("/book/:id", getBookId);
 router.post("/book", addBookToFavorites);
 
 router.delete("/book", removeBookFromFavorites);
+
+router.get("/writer/:writerId", getWriterInfoForReader);
 
 export default router;

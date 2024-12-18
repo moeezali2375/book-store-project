@@ -1,5 +1,6 @@
 import readerModel from "../models/readerModel.js";
 import bookModel from "../models/bookModel.js";
+import writerModel from "../models/writerModel.js";
 
 export const getReaderInfo = async (req, res) => {
   try {
@@ -102,6 +103,20 @@ export const removeBookFromFavorites = async (req, res) => {
     }
 
     res.status(200).send({ msg: "Book removed from favorites", reader });
+  } catch (error) {
+    res.status(400).send({ msg: error.message });
+  }
+};
+
+export const getWriterInfoForReader = async (req, res) => {
+  try {
+    const { writerId } = req.params;
+    const writer = await writerModel
+      .findById(writerId)
+      .populate({ path: "userId", select: "name email" })
+      .select("biography");
+
+    res.status(200).send({ writer: writer });
   } catch (error) {
     res.status(400).send({ msg: error.message });
   }
