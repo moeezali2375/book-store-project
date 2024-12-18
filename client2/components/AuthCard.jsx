@@ -34,6 +34,7 @@ const AuthCard = () => {
       try {
         setIsLoading(true);
         const res = await axiosInstance.post(`/${role}`, formData);
+        console.log(res.data.user);
         setUser(res.data.user);
       } catch (error) {
       } finally {

@@ -21,7 +21,7 @@ const useAxios = () => {
         if (error.response?.data?.msg) {
           alert(error.response.data.msg.title);
         } else {
-          alert("An unexpected error occurred!");
+          //alert("An unexpected error occurred!");
         }
         return Promise.reject(error);
       },

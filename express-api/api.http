@@ -1,5 +1,5 @@
 @url=http://localhost:4000/api
-@writerToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY3NTkyNjZhYjU2ODVhYWE3MTk0ODAxMSIsIm5hbWUiOiJNb2VleiBBbGkiLCJlbWFpbCI6Im1vZWV6YWxpMjM3NUBpY2xvdWQuY29tIiwiaXNWZXJpZmllZCI6ZmFsc2UsInJvbGUiOiJ3cml0ZXIifSwiaWF0IjoxNzMzODk1Nzg5LCJleHAiOjE3MzM5ODIxODl9.LsA9lybkj1dRx4J1xiybF3YB_AOSw8IDMUZSfouwV1Y
+@writerToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY3NTkyNjZhYjU2ODVhYWE3MTk0ODAxMSIsIm5hbWUiOiJNb2VleiBBbGkiLCJlbWFpbCI6Im1vZWV6YWxpMjM3NUBpY2xvdWQuY29tIiwiaXNWZXJpZmllZCI6dHJ1ZSwicm9sZSI6IndyaXRlciJ9LCJpYXQiOjE3MzQ1MTE2NDQsImV4cCI6MTczNDU5ODA0NH0.EHgfy5XnBUY6G83HsPe_Whp2Q69Yu4D2EQNkhJhrk3c
 @readerToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY3NTkyNmE0YjU2ODVhYWE3MTk0ODAxNyIsIm5hbWUiOiJNb2VleiBBbGkiLCJlbWFpbCI6Im1vZWV6YWxpMjM3NUBnbWFpbC5jb20iLCJpc1ZlcmlmaWVkIjpmYWxzZSwicm9sZSI6InJlYWRlciJ9LCJpYXQiOjE3MzM4OTU4NDcsImV4cCI6MTczMzk4MjI0N30.n0gNZY7vv3dV_Zzcs9iWsFVsKhPxbcJbg6eDrgK1ics
 ###
 GET {{url}}
@@ -22,7 +22,7 @@ Content-Type:application/json
 
 {
 	"name":"Moeez Ali",
-	"email":"moeezali2375@gmail.com",
+	"email":"l211798@lhr.nu.edu.pk",
 	"password":"1234",
 	"role":"reader"
 }

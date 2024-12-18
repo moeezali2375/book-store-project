@@ -24,6 +24,6 @@ router.get("/token", protect(["reader", "writer"], 0), regenerateToken);
 
 router.post("/login", login);
 
-router.post("/logout", protect(["reader", "writer"]), logout);
+router.post("/logout", protect(["reader", "writer"], 0), logout);
 
 export default router;

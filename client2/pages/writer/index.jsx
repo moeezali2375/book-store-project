@@ -20,23 +20,22 @@ const Home = () => {
       }
     };
     fetchBooks();
-  }, [axiosInstance]);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="p-10">
       <h1 className="text-3xl font-bold mb-6">Writer Dashboard</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* Book Cards */}
-        <BookCard
-          bookName="My First Book"
-          genre="Fiction"
-          description="This is a brief description of the book."
-        />
-        <BookCard
-          bookName="Another Book"
-          genre="Adventure"
-          description="Another brief description."
-        />
+        {books.map((book) => (
+          <BookCard
+            key={book._id}
+            bookName={book.title}
+            genre={book.genreId.name}
+            description={book.description}
+          />
+        ))}
         {/* Create New Book Card */}
         <div
           className="bg-gray-200 text-gray-600 text-center flex items-center justify-center rounded-lg p-4 cursor-pointer hover:bg-gray-300"
@@ -57,6 +56,7 @@ const Home = () => {
       <CreateBookModal
         isOpen={isCreateBookOpen}
         onClose={() => setIsCreateBookOpen(false)}
+        setBooks={setBooks}
       />
       <UpdateBiographyModal
         isOpen={isUpdateBioOpen}

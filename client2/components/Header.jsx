@@ -3,14 +3,16 @@ import useUser from "@/hooks/useUser";
 import React from "react";
 
 const Header = () => {
-  const { user, setUser } = useUser();
+  const { user, logout } = useUser();
   const { axiosInstance } = useAxios();
 
   const onLogout = async () => {
     try {
       await axiosInstance.post("/logout");
-      setUser();
-    } catch (error) {}
+      logout();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
