@@ -134,5 +134,5 @@ Content-Type: application/json
 } 
 
 ### 
-GET {{url}}/writer/6759266ab5685aaa71948013
+GET {{url}}/reader/writer/6759266ab5685aaa71948013
 Cookie: token={{readerToken}}
