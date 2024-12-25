@@ -125,13 +125,9 @@ Content-Type: application/json
 }
 
 ###
-DELETE {{url}}/reader/book
+DELETE {{url}}/reader/book/676c5423753c9efd7c58dbdd
 Cookie: token={{readerToken}}
-Content-Type: application/json
-
-{
-	"bookId":"67576550267f155a200fc0d4"
-} 
+ 
 
 ### 
 GET {{url}}/reader/writer/6759266ab5685aaa71948013

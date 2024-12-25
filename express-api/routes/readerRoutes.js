@@ -21,7 +21,7 @@ router.get("/book/:id", getBookId);
 
 router.post("/book", addBookToFavorites);
 
-router.delete("/book", removeBookFromFavorites);
+router.delete("/book/:bookId", removeBookFromFavorites);
 
 router.get("/writer/:writerId", getWriterInfoForReader);
 

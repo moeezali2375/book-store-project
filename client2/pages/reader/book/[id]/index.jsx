@@ -1,31 +1,32 @@
-import { useState } from 'react';
-import axios from 'axios';
-import cookieParser from 'cookie-parser';
-import Link from 'next/link';
+import { useState } from "react";
+import cookieParser from "cookie-parser";
+import Link from "next/link";
+import useAxios from "@/hooks/useAxios";
+import axios from "axios";
 
 export default function BookPage({ book }) {
-  // Dummy data for ratings and comments
-  const [reviews, setReviews] = useState([
-    { _id: 'r1', stars: 5, text: 'Amazing book!', user: 'John Doe', createdAt: '2024-12-01' },
-    { _id: 'r2', stars: 4, text: 'A great read for anyone who loves fiction.', user: 'Jane Doe', createdAt: '2024-12-02' },
-  ]);
-
+  const [reviews, setReviews] = useState(book.reviews);
+  const { axiosInstance } = useAxios();
   const [newRating, setNewRating] = useState(0);
-  const [newComment, setNewComment] = useState('');
+  const [newComment, setNewComment] = useState("");
 
-  // Add new review (rating + comment)
-  const handleAddReview = () => {
-    if (newRating > 0 && newComment.trim() !== '') {
-      const newReview = {
-        _id: `r${reviews.length + 1}`,
-        stars: newRating,
-        text: newComment,
-        user: 'Guest User',
-        createdAt: new Date().toISOString().split('T')[0],
-      };
-      setReviews([...reviews, newReview]);
-      setNewRating(0); // Reset the rating selection
-      setNewComment(''); // Reset the comment field
+  const handleAddReview = async () => {
+    try {
+      if (newRating > 0 && newComment.trim() !== "") {
+        const newReview = {
+          star: newRating,
+          description: newComment,
+        };
+        const res = await axiosInstance.post(
+          `/reader/${book._id}/review`,
+          newReview,
+        );
+        setReviews([...res.data.book.reviews]);
+        setNewRating(0);
+        setNewComment("");
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -35,8 +36,13 @@ export default function BookPage({ book }) {
       <h1 className="text-4xl font-bold mb-2">{book.title}</h1>
       <p className="text-lg mb-4">{book.description}</p>
       <p className="text-md text-gray-600">Genre: {book.genreId.name}</p>
-      <p className="text-md text-gray-600">Author Bio: {book.writerId.biography}</p>
-      <Link className="text-blue-500 underline" href={`/reader/author/${book.writerId._id}`}>
+      <p className="text-md text-gray-600">
+        Author Bio: {book.writerId.biography}
+      </p>
+      <Link
+        className="text-blue-500 underline"
+        href={`/reader/author/${book.writerId._id}`}
+      >
         View Details
       </Link>
 
@@ -44,15 +50,18 @@ export default function BookPage({ book }) {
       <div className="mt-8">
         <h2 className="text-2xl font-bold mb-4">Reviews</h2>
         <div>
-          {reviews.map((review) => (
-            <div key={review._id} className="border-b py-2">
-              <p className="text-yellow-500">Rating: {'★'.repeat(review.stars)}</p>
-              <p className="text-gray-800">{review.text}</p>
-              <p className="text-sm text-gray-500">
-                By {review.user} on {review.createdAt}
-              </p>
-            </div>
-          ))}
+          {reviews &&
+            reviews.map((review) => (
+              <div key={review._id} className="border-b py-2">
+                <p className="text-yellow-500">
+                  Rating: {"★".repeat(review.star)}
+                </p>
+                <p className="text-gray-800">{review.description}</p>
+                <p className="text-sm text-gray-500">
+                  By {review.postedBy.userId.name}
+                </p>
+              </div>
+            ))}
         </div>
 
         {/* Add Review */}
@@ -64,8 +73,9 @@ export default function BookPage({ book }) {
               <button
                 key={star}
                 onClick={() => setNewRating(star)}
-                className={`text-xl ${newRating >= star ? 'text-yellow-500' : 'text-gray-400'
-                  } hover:text-yellow-500`}
+                className={`text-xl ${
+                  newRating >= star ? "text-yellow-500" : "text-gray-400"
+                } hover:text-yellow-500`}
               >
                 ★
               </button>
@@ -100,28 +110,32 @@ export async function getServerSideProps(context) {
   if (!cookies)
     return {
       redirect: {
-        destination: '/auth',
+        destination: "/auth",
       },
     };
 
   try {
     // Fetch the book details from the API
-    const response = await axios.get(`http://localhost:4000/api/reader/book/${id}`, {
-      headers: {
-        Cookie: cookies,
+    const response = await axios.get(
+      `http://localhost:4000/api/reader/book/${id}`,
+      {
+        headers: {
+          Cookie: cookies,
+        },
+        withCredentials: true,
       },
-      withCredentials: true,
-    });
+    );
     book = response.data.book;
+    console.log(book);
   } catch (error) {
-    console.error('Error fetching book details:', error);
+    console.error("Error fetching book details:", error);
     // Fallback dummy book details if API fails
     book = {
-      _id: '1',
-      title: 'Dummy Book',
-      description: 'This is a fallback description for the book.',
-      genreId: { name: 'Fallback Genre' },
-      writerId: { biography: 'Fallback biography for the author.' },
+      _id: "1",
+      title: "Dummy Book",
+      description: "This is a fallback description for the book.",
+      genreId: { name: "Fallback Genre" },
+      writerId: { biography: "Fallback biography for the author." },
     };
   }
 

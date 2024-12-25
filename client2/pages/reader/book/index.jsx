@@ -1,7 +1,8 @@
-import { useState } from 'react';
-import Link from 'next/link';
-import axios from 'axios';
-import cookieParser from 'cookie-parser';
+import { useState } from "react";
+import Link from "next/link";
+import axios from "axios";
+import cookieParser from "cookie-parser";
+import useAxios from "@/hooks/useAxios";
 let cookies;
 
 export async function getServerSideProps(context) {
@@ -10,23 +11,30 @@ export async function getServerSideProps(context) {
   if (!cookies)
     return {
       redirect: {
-        destination: '/auth',
+        destination: "/auth",
       },
     };
 
-  const response = await axios.get('http://localhost:4000/api/reader/book', {
+  const response = await axios.get("http://localhost:4000/api/reader/book", {
     headers: {
       Cookie: cookies,
     },
     withCredentials: true,
   });
 
-  const res = await axios.get('http://localhost:4000/api/genre', {
+  const res = await axios.get("http://localhost:4000/api/genre", {
     headers: {
       Cookie: cookies,
     },
     withCredentials: true,
   });
+
+  const res2 = await axios.get("http://localhost:4000/api/reader", {
+    headers: { Cookie: cookies },
+    withCredentials: true,
+  });
+
+  const fvts = res2.data.reader.favoriteBooks.map((f) => f._id);
 
   const genres = res.data.genres;
   const books = response.data.books;
@@ -34,49 +42,41 @@ export async function getServerSideProps(context) {
     props: {
       books,
       genres,
+      fvts,
     },
   };
 }
 
-export default function Home({ books, genres }) {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [favorites, setFavorites] = useState([]);
-  const [selectedGenre, setSelectedGenre] = useState(''); // State for selected genre
+export default function Home({ books, genres, fvts }) {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [favorites, setFavorites] = useState(fvts);
+  const { axiosInstance } = useAxios();
+  const [selectedGenre, setSelectedGenre] = useState(""); // State for selected genre
 
   const toggleFavorite = async (bookId) => {
     try {
-      if (favorites.includes(bookId)) {
-        await fetch(`http://localhost:4000/api/reader/book`, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-            'Cookie': cookies,
-          },
-          withCredentials: true,
-          body: JSON.stringify({ bookId }),
-        });
-        setFavorites(favorites.filter((id) => id !== bookId));
+      if (favorites?.includes(bookId)) {
+        await axiosInstance.delete(`/reader/book/${bookId}`);
+        setFavorites(favorites?.filter((id) => id !== bookId));
       } else {
-        await fetch(`http://localhost:4000/api/reader/book`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Cookie': cookies,
-          },
-          withCredentials: true,
-          body: JSON.stringify({ bookId }),
+        await axiosInstance.post("/reader/book", {
+          bookId: bookId,
         });
         setFavorites([...favorites, bookId]);
       }
     } catch (error) {
-      console.error('Error toggling favorite:', error);
+      console.error("Error toggling favorite:", error);
     }
   };
 
   // Filter books based on search term and selected genre
   const filteredBooks = books.filter((book) => {
-    const matchesSearch = book.title.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesGenre = selectedGenre ? book.genreId._id === selectedGenre : true;
+    const matchesSearch = book.title
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    const matchesGenre = selectedGenre
+      ? book.genreId._id === selectedGenre
+      : true;
     return matchesSearch && matchesGenre;
   });
 
@@ -126,12 +126,20 @@ export default function Home({ books, genres }) {
             <div className="flex justify-between items-center">
               <button
                 onClick={() => toggleFavorite(book._id)}
-                className={`px-4 py-2 rounded-md ${favorites.includes(book._id) ? 'bg-red-500 text-white' : 'bg-blue-500 text-white'
-                  }`}
+                className={`px-4 py-2 rounded-md ${
+                  favorites?.includes(book._id)
+                    ? "bg-red-500 text-white"
+                    : "bg-blue-500 text-white"
+                }`}
               >
-                {favorites.includes(book._id) ? 'Remove from Fav' : 'Add to Fav'}
+                {favorites?.includes(book._id)
+                  ? "Remove from Fav"
+                  : "Add to Fav"}
               </button>
-              <Link className="text-blue-500 underline" href={`/reader/book/${book._id}`}>
+              <Link
+                className="text-blue-500 underline"
+                href={`/reader/book/${book._id}`}
+              >
                 View Details
               </Link>
             </div>

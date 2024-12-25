@@ -99,7 +99,7 @@ export const addBookToFavorites = async (req, res) => {
 
 export const removeBookFromFavorites = async (req, res) => {
   try {
-    const { bookId } = req.body;
+    const { bookId } = req.params;
 
     const reader = await readerModel.findOneAndUpdate(
       { userId: req.user._id },
