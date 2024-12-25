@@ -18,6 +18,25 @@ const bookSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Writer",
   },
+  reviews: [
+    {
+      star: {
+        type: Number,
+        required: true,
+        min: 1,
+        max: 5,
+      },
+      description: {
+        type: String,
+        required: true,
+      },
+      postedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Reader",
+        required: true,
+      },
+    },
+  ],
 });
 
 export default mongoose.model("Book", bookSchema);

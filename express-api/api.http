@@ -1,6 +1,6 @@
 @url=http://localhost:4000/api
-@writerToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY3NTkyNjZhYjU2ODVhYWE3MTk0ODAxMSIsIm5hbWUiOiJNb2VleiBBbGkiLCJlbWFpbCI6Im1vZWV6YWxpMjM3NUBpY2xvdWQuY29tIiwiaXNWZXJpZmllZCI6dHJ1ZSwicm9sZSI6IndyaXRlciJ9LCJpYXQiOjE3MzQ1MTE2NDQsImV4cCI6MTczNDU5ODA0NH0.EHgfy5XnBUY6G83HsPe_Whp2Q69Yu4D2EQNkhJhrk3c
-@readerToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY3NTc2ODExMjY3ZjE1NWEyMDBmYzBlMCIsIm5hbWUiOiJNb2VleiBBbGkiLCJlbWFpbCI6Im1vZWV6YWxpMjM3NUBnbWFpbC5jb20iLCJpc1ZlcmlmaWVkIjp0cnVlLCJyb2xlIjoicmVhZGVyIn0sImlhdCI6MTczNDU2MTI1MiwiZXhwIjoxNzM0NjQ3NjUyfQ.DrSU1FkgUOM609SBSTvYJ924oXfh1WosbBN5HrT2uXY
+@writerToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY3NmM1MmVkNzUzYzllZmQ3YzU4ZGJiOSIsIm5hbWUiOiJNb2VleiBBbGkiLCJlbWFpbCI6Im1vZWV6YWxpMjM3NUBpY2xvdWQuY29tIiwiaXNWZXJpZmllZCI6ZmFsc2UsInJvbGUiOiJ3cml0ZXIifSwiaWF0IjoxNzM1MTUyMzY5LCJleHAiOjE3MzUyMzg3Njl9.dd0nqod1qxhjGBUrIOKkoWX7fkfp1UxggEoEKHM8OVQ
+@readerToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY3NmM1MzQyNzUzYzllZmQ3YzU4ZGJjMiIsIm5hbWUiOiJNb2VleiBBbGkiLCJlbWFpbCI6Im1vZWV6YWxpMjM3NUBnbWFpbC5jb20iLCJpc1ZlcmlmaWVkIjpmYWxzZSwicm9sZSI6InJlYWRlciJ9LCJpYXQiOjE3MzUxNTI0NTIsImV4cCI6MTczNTIzODg1Mn0.Ld6yV9HVb6JRxjL3F6DiWdxpqbnPYzJO6Z7Re5NyBhs
 ###
 GET {{url}}
 
@@ -22,17 +22,17 @@ Content-Type:application/json
 
 {
 	"name":"Moeez Ali",
-	"email":"l211798@lhr.nu.edu.pk",
+	"email":"moeezali2375@gmail.com",
 	"password":"1234",
 	"role":"reader"
 }
 
 ###
-GET {{url}}/writer/verify/577959
+GET {{url}}/writer/verify/201861
 Cookie: token={{writerToken}}
 
 ###
-GET {{url}}/reader/verify/976173
+GET {{url}}/reader/verify/785581
 Cookie: token={{readerToken}}
 
 ###
@@ -80,10 +80,10 @@ Cookie: token={{writerToken}}
 Content-Type: application/json
 
 {
-	"title":"School di kitaab 4",
-	"description":"Bohemia k ganay ki baat ho rhi hai yaha.",
-	"content":"mundeya no geet mere yaad jiwein school de kitaab.",
-	"genreId":"671a17a2dee57c5b8d3aa99d"
+	"title":"School di kitaab 2",
+	"description":"This is a test book 2",
+	"content":"This is the content of a test book",
+	"genreId":"671a17a2dee57c5b8d3aa99e"
 }
 
 ###
@@ -112,7 +112,7 @@ GET {{url}}/reader/book
 Cookie: token={{readerToken}}
 
 ###
-GET {{url}}/reader/book/67577c22047e807f1be7c3d2
+GET {{url}}/reader/book/676c53ae753c9efd7c58dbd9
 Cookie: token={{readerToken}}
 
 ###
@@ -121,7 +121,7 @@ Cookie: token={{readerToken}}
 Content-Type: application/json
 
 {
-	"bookId":"67577c22047e807f1be7c3d2"
+	"bookId":"676c53ae753c9efd7c58dbd9"
 }
 
 ###
@@ -136,3 +136,13 @@ Content-Type: application/json
 ### 
 GET {{url}}/reader/writer/6759266ab5685aaa71948013
 Cookie: token={{readerToken}}
+
+###
+POST {{url}}/reader/676c53ae753c9efd7c58dbd9/review
+Cookie: token={{readerToken}}
+Content-Type: application/json
+
+{
+  "star": 5,
+  "description": "This is a another review."
+}

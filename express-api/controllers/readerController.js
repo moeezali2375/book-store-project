@@ -1,6 +1,7 @@
 import readerModel from "../models/readerModel.js";
 import bookModel from "../models/bookModel.js";
 import writerModel from "../models/writerModel.js";
+import { populate } from "dotenv";
 
 export const getReaderInfo = async (req, res) => {
   try {
@@ -56,6 +57,14 @@ export const getBookId = async (req, res) => {
       .populate({
         path: "writerId",
         populate: { path: "userId", select: "name email" },
+      })
+      .populate({
+        path: "reviews",
+        populate: {
+          path: "postedBy",
+          populate: { path: "userId", select: "name" },
+          select: "-favoriteBooks -__v",
+        },
       });
     res.status(200).send({ book: book });
   } catch (error) {
@@ -117,6 +126,50 @@ export const getWriterInfoForReader = async (req, res) => {
       .select("biography");
 
     res.status(200).send({ writer: writer });
+  } catch (error) {
+    res.status(400).send({ msg: error.message });
+  }
+};
+
+export const postAReview = async (req, res) => {
+  try {
+    const readerId = await readerModel.findOne({ userId: req.user._id });
+    const { bookId } = req.params;
+    const { star, description } = req.body;
+    const book = await bookModel
+      .findByIdAndUpdate(
+        bookId,
+        {
+          $push: {
+            reviews: {
+              star: star,
+              description: description,
+              postedBy: readerId,
+            },
+          },
+        },
+        { new: true },
+      )
+      .populate({ path: "genreId" })
+      .populate({
+        path: "writerId",
+        populate: { path: "userId", select: "name email" },
+      })
+      .populate({
+        path: "reviews",
+        populate: {
+          path: "postedBy",
+          populate: { path: "userId", select: "name" },
+          select: "-favoriteBooks -__v",
+        },
+      });
+
+    res.status(200).send({
+      book: book,
+      msg: {
+        title: "Review Posted Successfully 🎉✨",
+      },
+    });
   } catch (error) {
     res.status(400).send({ msg: error.message });
   }
