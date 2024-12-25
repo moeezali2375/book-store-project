@@ -1,9 +1,9 @@
-// pages/index.js
 import { useState } from 'react';
 import Link from 'next/link';
 import axios from 'axios';
 import cookieParser from 'cookie-parser';
 let cookies;
+
 export async function getServerSideProps(context) {
   const { req } = context;
   cookies = cookieParser.JSONCookies(req.headers.cookie);
@@ -11,32 +11,41 @@ export async function getServerSideProps(context) {
     return {
       redirect: {
         destination: '/auth',
-      }
-    }
+      },
+    };
 
   const response = await axios.get('http://localhost:4000/api/reader/book', {
     headers: {
-      Cookie: cookies
+      Cookie: cookies,
     },
     withCredentials: true,
-  }
-  );
-  const books = response.data.books; // Access the books array
+  });
+
+  const res = await axios.get('http://localhost:4000/api/genre', {
+    headers: {
+      Cookie: cookies,
+    },
+    withCredentials: true,
+  });
+
+  const genres = res.data.genres;
+  const books = response.data.books;
   return {
     props: {
       books,
+      genres,
     },
   };
 }
 
-export default function Home({ books }) {
+export default function Home({ books, genres }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [favorites, setFavorites] = useState([]);
+  const [selectedGenre, setSelectedGenre] = useState(''); // State for selected genre
 
   const toggleFavorite = async (bookId) => {
     try {
       if (favorites.includes(bookId)) {
-        // Remove from favorites
         await fetch(`http://localhost:4000/api/reader/book`, {
           method: 'DELETE',
           headers: {
@@ -46,10 +55,8 @@ export default function Home({ books }) {
           withCredentials: true,
           body: JSON.stringify({ bookId }),
         });
-        console.log("removed")
         setFavorites(favorites.filter((id) => id !== bookId));
       } else {
-        // Add to favorites
         await fetch(`http://localhost:4000/api/reader/book`, {
           method: 'POST',
           headers: {
@@ -59,8 +66,6 @@ export default function Home({ books }) {
           withCredentials: true,
           body: JSON.stringify({ bookId }),
         });
-
-        console.log("added")
         setFavorites([...favorites, bookId]);
       }
     } catch (error) {
@@ -68,15 +73,17 @@ export default function Home({ books }) {
     }
   };
 
-  const filteredBooks = books.filter((book) =>
-    book.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Filter books based on search term and selected genre
+  const filteredBooks = books.filter((book) => {
+    const matchesSearch = book.title.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesGenre = selectedGenre ? book.genreId._id === selectedGenre : true;
+    return matchesSearch && matchesGenre;
+  });
 
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Reader</h1>
 
-      {/* Button to View Favorites */}
       <div className="mb-4">
         <Link href="/reader/favorites">
           <button className="px-4 py-2 bg-green-500 text-white rounded-md">
@@ -90,8 +97,22 @@ export default function Home({ books }) {
         placeholder="Search for books..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        className="w-full px-4 py-2 mb-6 border border-gray-300 rounded-md"
+        className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-md"
       />
+
+      {/* Genre Dropdown */}
+      <select
+        value={selectedGenre}
+        onChange={(e) => setSelectedGenre(e.target.value)}
+        className="w-full px-4 py-2 mb-6 border border-gray-300 rounded-md"
+      >
+        <option value="">All Genres</option>
+        {genres.map((genre) => (
+          <option key={genre._id} value={genre._id}>
+            {genre.name}
+          </option>
+        ))}
+      </select>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {filteredBooks.map((book) => (
@@ -105,9 +126,7 @@ export default function Home({ books }) {
             <div className="flex justify-between items-center">
               <button
                 onClick={() => toggleFavorite(book._id)}
-                className={`px-4 py-2 rounded-md ${favorites.includes(book._id)
-                  ? 'bg-red-500 text-white'
-                  : 'bg-blue-500 text-white'
+                className={`px-4 py-2 rounded-md ${favorites.includes(book._id) ? 'bg-red-500 text-white' : 'bg-blue-500 text-white'
                   }`}
               >
                 {favorites.includes(book._id) ? 'Remove from Fav' : 'Add to Fav'}

@@ -10,10 +10,13 @@ export default function AuthorPage({ author }) {
 
             <div className="border p-4 rounded-md shadow-md">
                 <p className="text-xl mb-2">
-                    <span className="font-semibold">Author Name:</span> {author.userId.name}
+                    <span className="font-semibold">Author Name:</span> {author?.userId?.name}
+                </p>
+                <p className="text-xl mb-2">
+                    <span className="font-semibold">Email:</span> {author?.userId?.email}
                 </p>
                 <p className="text-lg mb-2">
-                    <span className="font-semibold">Biography:</span> {author.biography || 'No biography available'}
+                    <span className="font-semibold">Biography:</span> {author?.biography || 'No biography available'}
                 </p>
             </div>
         </div>
