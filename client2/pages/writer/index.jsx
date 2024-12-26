@@ -1,9 +1,9 @@
 import useAxios from "@/hooks/useAxios";
 import React, { useEffect, useState } from "react";
-import BookCard from "@/components/BookCard";
 import CreateBookModal from "@/components/CreateBookModal";
 import UpdateBiographyModal from "@/components/UpdateBiographyModal";
 import Link from "next/link";
+import BookCard2 from "@/components/BookCard2";
 
 const Home = () => {
   const [books, setBooks] = useState([]);
@@ -21,21 +21,29 @@ const Home = () => {
       }
     };
     fetchBooks();
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const handleDelete = async (bookId) => {
+    try {
+      await axiosInstance.delete(`/writer/book/${bookId}`);
+      const newBooks = books.filter((book) => book._id !== bookId);
+      setBooks(newBooks);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className="p-10">
       <h1 className="text-3xl font-bold mb-6">Writer Dashboard</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {books.map((book) => (
-          <Link href={`/writer/book/${book._id}`}>
-            <BookCard
-              key={book._id}
+          <Link key={book._id} href={`/writer/book/${book._id}`}>
+            <BookCard2
               bookName={book.title}
               genre={book.genreId.name}
               description={book.description}
+              onDelete={() => handleDelete(book._id)}
             />
           </Link>
         ))}

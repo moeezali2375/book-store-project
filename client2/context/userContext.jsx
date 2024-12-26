@@ -5,6 +5,7 @@ export const UserContext = createContext(null);
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -14,19 +15,22 @@ export const UserProvider = ({ children }) => {
         const user = JSON.parse(localStorage.getItem("user"));
         setUser(user);
       } else {
-        router.push("/auth");
+        // router.push("/auth");
       }
+      setIsLoading(true);
     };
     fetchUser();
   }, []);
 
   useEffect(() => {
-    if (user && user?.isVerified) {
-      router.push(`/${user.role}`);
-    } else if (user && user.isVerified === false) {
-      router.push(`/otp/${user.role}`);
-    } else if (!user) {
-      router.push("/auth");
+    if (isLoading) {
+      if (user && user?.isVerified) {
+        router.push(`/${user.role}`);
+      } else if (user && user.isVerified === false) {
+        router.push(`/otp/${user.role}`);
+      } else if (!user) {
+        router.push("/auth");
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
@@ -35,6 +39,7 @@ export const UserProvider = ({ children }) => {
     if (user) {
       console.log("user removed from local storage");
       localStorage.removeItem("user");
+      router.push("/auth");
       setUser(null);
     }
   };

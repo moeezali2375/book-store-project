@@ -33,8 +33,6 @@ const CreateBookModal = ({ isOpen, onClose, setBooks }) => {
       content,
     };
 
-    console.log("Book created:", newBook);
-
     try {
       const res = await axiosInstance.post("/writer/book", { ...newBook });
       setBooks((books) => [...books, res.data.book]);

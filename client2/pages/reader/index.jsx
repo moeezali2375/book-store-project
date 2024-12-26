@@ -1,15 +1,16 @@
 import Link from "next/link";
-import { useRouter } from "next/router";
 import React from "react";
 
-
 const Home = () => {
-  const router = useRouter();
-  router.push("/reader/book");
   return (
-    <Link href="/reader/book">
-      <div>Home page for reader</div>
-    </Link>
+    <div className="flex items-center justify-center h-screen">
+      <Link
+        href="/reader/book"
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+      >
+        Explore Books
+      </Link>
+    </div>
   );
 };
 

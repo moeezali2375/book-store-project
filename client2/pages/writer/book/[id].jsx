@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { useRouter } from "next/router";
 import useAxios from "@/hooks/useAxios";
 import axios from "axios";
-import cookieParser from 'cookie-parser';
+import cookieParser from "cookie-parser";
 
-const EditBookPage = ({ book, genres }) => {
+const EditBookPage = ({ book, genres, review }) => {
   const router = useRouter();
   const { axiosInstance } = useAxios();
 
@@ -27,10 +27,8 @@ const EditBookPage = ({ book, genres }) => {
     e.preventDefault();
     try {
       await axiosInstance.put(`/writer/book/${book._id}`, bookDetails);
-      alert("Book updated successfully!");
-      router.push("/"); // Navigate back to the dashboard or book details page
+      router.push("/");
     } catch (err) {
-      alert("Failed to update book. Please try again.");
       console.error(err);
     }
   };
@@ -38,9 +36,25 @@ const EditBookPage = ({ book, genres }) => {
   return (
     <div className="p-10">
       <h1 className="text-3xl font-bold mb-6">Edit Book</h1>
+
+      {/* Display review */}
+      <div className="mb-4">
+        <h2 className="text-lg font-semibold">
+          Reviews:{" "}
+          {review === 0 ? (
+            <span>No reviews have been given</span>
+          ) : (
+            <span>{review} out of 5</span>
+          )}
+        </h2>
+      </div>
+
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="title" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="title"
+            className="block text-sm font-medium text-gray-700"
+          >
             Book Title
           </label>
           <input
@@ -54,7 +68,10 @@ const EditBookPage = ({ book, genres }) => {
           />
         </div>
         <div>
-          <label htmlFor="genreId" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="genreId"
+            className="block text-sm font-medium text-gray-700"
+          >
             Genre
           </label>
           <select
@@ -76,7 +93,10 @@ const EditBookPage = ({ book, genres }) => {
           </select>
         </div>
         <div>
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="description"
+            className="block text-sm font-medium text-gray-700"
+          >
             Description
           </label>
           <textarea
@@ -90,7 +110,10 @@ const EditBookPage = ({ book, genres }) => {
           ></textarea>
         </div>
         <div>
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="content"
+            className="block text-sm font-medium text-gray-700"
+          >
             Content
           </label>
           <textarea
@@ -132,44 +155,39 @@ export async function getServerSideProps(context) {
   if (!cookies)
     return {
       redirect: {
-        destination: '/auth',
+        destination: "/auth",
       },
     };
 
-
-
   try {
-    const bookRes = await axios.get(`http://localhost:4000/api/writer/book/${id}`, {
+    const bookRes = await axios.get(
+      `http://localhost:4000/api/writer/book/${id}`,
+      {
+        headers: {
+          Cookie: cookies,
+        },
+        withCredentials: true,
+      },
+    );
+
+    const genresRes = await axios.get("http://localhost:4000/api/genre", {
       headers: {
         Cookie: cookies,
       },
       withCredentials: true,
     });
-
-    const genresRes = axios.get('http://localhost:4000/api/genre', {
-      headers: {
-        Cookie: cookies,
-      },
-      withCredentials: true,
-    });
-
-
-    // if (!bookRes.ok || !genresRes.ok) {
-    //   throw new Error("Failed to fetch data");
-    // }
-    console.log(bookRes.data.book);
-    console.log(genresRes.data);
 
     return {
       props: {
         book: bookRes.data.book,
-        genres: genresRes.data,
+        genres: genresRes.data.genres,
+        review: bookRes.data.review,
       },
     };
   } catch (error) {
     console.error(error);
     return {
-      notFound: true, // Show 404 page if data fetching fails
+      notFound: true,
     };
   }
 }
