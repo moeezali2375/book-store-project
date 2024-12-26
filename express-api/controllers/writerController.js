@@ -39,6 +39,25 @@ export const getMyBooks = async (req, res) => {
   }
 };
 
+export const getMyBook = async (req, res) => {
+  try {
+    const writer = await writerModel.findOne({ userId: req.user._id });
+    const myBook = await bookModel
+      .findOne({ writerId: writer._id, _id: req.params.bookId })
+      .populate("genreId");
+    let review;
+    let average = 0;
+    myBook.reviews.forEach((r) => {
+      average = average + r.star;
+    });
+    if (average !== 0) review = (average / (myBook.reviews.length * 5)) * 5;
+    else review = 0;
+    res.status(200).send({ book: myBook, review: review });
+  } catch (error) {
+    res.status(400).send({ msg: { title: error.message } });
+  }
+};
+
 export const createBook = async (req, res) => {
   try {
     const { title, description, content, genreId } = req.body;

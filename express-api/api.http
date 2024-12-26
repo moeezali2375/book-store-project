@@ -75,6 +75,10 @@ GET {{url}}/writer/book
 Cookie: token={{writerToken}}
 
 ###
+GET {{url}}/writer/book/676c53ae753c9efd7c58dbd9
+Cookie: token={{writerToken}}
+
+###
 POST {{url}}/writer/book
 Cookie: token={{writerToken}}
 Content-Type: application/json

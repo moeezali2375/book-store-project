@@ -3,6 +3,7 @@ import { protect } from "../middlewares/authMiddleware.js";
 import {
   createBook,
   deleteBook,
+  getMyBook,
   getMyBooks,
   getWriterInfo,
   updateBiography,
@@ -18,6 +19,8 @@ router.get("/", getWriterInfo);
 router.put("/", updateBiography);
 
 router.get("/book", getMyBooks);
+
+router.get("/book/:bookId", getMyBook);
 
 router.post("/book", createBook);
 
