@@ -74,7 +74,8 @@ export const createBook = async (req, res) => {
       writerId: writer._id,
     });
     const dbBook = await newBook.save();
-    res.status(200).send({ book: dbBook });
+    const book = await bookModel.findById(dbBook._id).populate("genreId");
+    res.status(200).send({ book: book });
   } catch (error) {
     res.status(400).send({ msg: error.message });
   }
@@ -97,7 +98,7 @@ export const deleteBook = async (req, res) => {
         .send({ msg: "Book not found or you're not authorized to delete it" });
     }
 
-    res.status(200).send({ msg: "Book deleted successfully" });
+    res.status(200).send({ msg: { title: "Book deleted successfully" } });
   } catch (error) {
     res.status(400).send({ msg: error.message });
   }
